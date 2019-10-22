@@ -276,8 +276,8 @@ steps:
     plugins:
       - acloudguru/metadata-env:
           keys:
-          - bumpversion=BUILDKITE_DOCKER_PUSH_TAG_BACKEND
-          - bumpversion=BUILDKITE_DOCKER_PUSH_TAG_APP
+          - bumpversion=BUILDKITE_DOCKER_PUSH_TAG_SERVICE_APP
+          - bumpversion=BUILDKITE_DOCKER_PUSH_TAG_SERVICE_BACKEND
       - docker-compose#v3.0.3:
           push:
           - app:index.docker.io/myorg/myrepo/myapp
