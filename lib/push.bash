@@ -18,6 +18,30 @@ compose_image_for_service() {
   echo "$image"
 }
 
+compose_custom_tag_for_service() {
+  local service="$1"
+  # i.e., BUILDKITE_DOCKER_TAG_SERVICE_SERVICENAME
+  local service_tag="BUILDKITE_DOCKER_PUSH_TAG_SERVICE_${service^^}"
+
+  if [[ -n "${!service_tag:-}" ]]; then
+    echo "${!service_tag}"
+  fi
+}
+
+compose_custom_tag() {
+  local service="$1"
+  local tag=""
+
+  # First check if there's a tag specific to the service
+  tag=$(compose_custom_tag_for_service $service)
+
+  if [[ -n $tag ]]; then
+    echo $tag
+  elif [[ -n "${BUILDKITE_DOCKER_PUSH_TAG:-}" ]]; then
+    echo $BUILDKITE_DOCKER_PUSH_TAG
+  fi
+}
+
 default_compose_image_for_service() {
   local service="$1"
 

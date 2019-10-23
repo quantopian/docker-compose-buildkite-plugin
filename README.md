@@ -256,6 +256,34 @@ steps:
           - app:index.docker.io/myorg/myrepo/myapp:latest
 ```
 
+Finally, if you want to push a dyanmically-defined tag you can use the `BUILDKITE_DOCKER_PUSH_TAG` or `BUILDKITE_DOCKER_PUSH_TAG_SERVICE_<SERVICENAME>` environment variables. Typically these environment variables would be saved as meta-data from previous tasks and passed in via a plugin. For example:
+
+```yml
+steps:
+  - label: ":docker: Push"
+    plugins:
+      - acloudguru/metadata-env:
+          keys:
+          - bumpversion=BUILDKITE_DOCKER_PUSH_TAG
+      - docker-compose#v3.0.3:
+          push:
+          - app:index.docker.io/myorg/myrepo/myapp
+```
+
+```yml
+steps:
+  - label: ":docker: Push"
+    plugins:
+      - acloudguru/metadata-env:
+          keys:
+          - bumpversion=BUILDKITE_DOCKER_PUSH_TAG_SERVICE_APP
+          - bumpversion=BUILDKITE_DOCKER_PUSH_TAG_SERVICE_BACKEND
+      - docker-compose#v3.0.3:
+          push:
+          - app:index.docker.io/myorg/myrepo/myapp
+          - backend:index.docker.io/myorg/myrepo/mybackendapp
+```
+
 ## Reusing caches from images
 
 A newly spawned agent won't contain any of the docker caches for the first run which will result in a long build step. To mitigate this you can reuse caches from a previously built image (if it was pushed from a previous build):
